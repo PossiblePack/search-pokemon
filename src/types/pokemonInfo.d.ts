@@ -47,3 +47,7 @@ export type TPokemonsItem = {
   types: TPokemonType[];
   image: string;
 };
+
+export type PokemonQueryData =  {
+  pokemon: TPokemonInfo | null;
+}

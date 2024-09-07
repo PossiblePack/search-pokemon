@@ -2,10 +2,10 @@
 import Image from "next/image";
 import React from "react";
 import TypeTag from "./TypeTag";
+import { TPokemonsItem, TPokemonType } from "@/types/pokemonInfo";
 
 type PokemonCardProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  data: TPokemonsItem;
 };
 
 const PokemonCard: React.FC<PokemonCardProps> = ({ data }) => {
@@ -35,7 +35,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ data }) => {
           <div className='flex gap-2'>
             <p className='py-1 rounded-lg text-base font-bold'>types: </p>
             <div className='flex gap-2'>
-              {data.types.map((type: string) => {
+              {data.types.map((type: TPokemonType) => {
                 return <TypeTag type={type} key={type} />;
               })}
             </div>

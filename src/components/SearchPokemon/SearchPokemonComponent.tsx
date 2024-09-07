@@ -4,11 +4,12 @@ import PokemonCard from "../UI/PokemonCard";
 import PokemonResult from "./PokemonResult";
 import { usePathname, useSearchParams } from "next/navigation";
 import { changeId } from "@/utils/PokemonUtils";
-import { TPokemonsItem } from "@/types/pokemonInfo";
-import { useFetchPokemonList } from "../services/search-pokemon.service";
-import LoadingCard from "./LoadingCard";
-import { useLazyQuery } from "@apollo/client";
-import { FETCH_POKEMON_BY_NAME } from "@/utils/query";
+import { PokemonQueryData, TPokemonsItem } from "@/types/pokemonInfo";
+import {
+  useFetchPokemonList,
+  useSearchPokemon,
+} from "../services/search-pokemon.service";
+import LoadingCard from "../UI/LoadingCard";
 import { SiPokemon } from "react-icons/si";
 import { IoChevronBackOutline } from "react-icons/io5";
 import router from "next/router";
@@ -21,29 +22,32 @@ const SearchPokemonComponent = () => {
   const id = searchParams.get("id");
   const [searchInput, setSearchInput] = useState<string>("");
   const [isnotFound, setIsNotfound] = useState<boolean>(false);
-  const [fetchPokemon, { loading: loadingSearch }] = useLazyQuery(
-    FETCH_POKEMON_BY_NAME(searchInput),
-    {
-      onCompleted: (data) => {
-        // This will run when data is successfully fetched
-        console.log("Data fetched successfully:", data);
-        if (data.pokemon !== null) {
-          changeId(searchParams.toString(), pathname, data.pokemon.id);
-          setIsNotfound(false);
-        } else {
-          router.push(pathname);
-          setIsNotfound(true);
-        }
-      },
+
+  const onSearchComplete = (data: PokemonQueryData) => {
+    // This will run when data is successfully fetched
+    if (data.pokemon !== null) {
+      changeId(searchParams.toString(), pathname, data.pokemon.id);
+      setIsNotfound(false);
+    } else {
+      router.push(pathname);
+      setIsNotfound(true);
     }
-  );
+  };
+
+  const { fetchPokemon, loading: loadingSearch } =
+    useSearchPokemon(onSearchComplete);
 
   const handleSearch = async () => {
     if (searchInput) {
-      await fetchPokemon();
+      await fetchPokemon({ variables: { name: searchInput } });
     } else {
       alert("please insert pokemon name to search");
     }
+  };
+
+  const onBackHome = () => {
+    setIsNotfound(false);
+    setSearchInput("");
   };
 
   return (
@@ -82,7 +86,7 @@ const SearchPokemonComponent = () => {
                 </p>
                 <SiPokemon size={150} className='w-full' />
                 <button
-                  onClick={() => setIsNotfound(false)}
+                  onClick={onBackHome}
                   className='w-full flex justify-center gap-1 items-center'
                 >
                   <IoChevronBackOutline size={25} />
