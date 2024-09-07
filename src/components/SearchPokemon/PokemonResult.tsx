@@ -7,7 +7,7 @@ import AttackTag from "../UI/AttackTag";
 import Evolutions from "./Evolutions";
 import { useSearchParams } from "next/navigation";
 import { useFetchPokemonById } from "../services/search-pokemon.service";
-import LoadingCard from "./LoadingCard";
+import LoadingCard from "../UI/LoadingCard";
 
 const PokemonResult: React.FC = () => {
   const searchParams = useSearchParams();
