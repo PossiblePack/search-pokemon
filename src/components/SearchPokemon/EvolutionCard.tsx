@@ -1,11 +1,11 @@
-import { TEvolutionInfo } from "@/types/pokemonInfo";
+import { TEvolutionInfo, TPokemonInfo } from "@/types/pokemonInfo";
 import Image from "next/image";
 import React from "react";
 import TypeTag from "../UI/TypeTag";
 import { getPokemonTypeColor } from "@/utils/PokemonUtils";
 
 type EvolutionCardProps = {
-  data: TEvolutionInfo;
+  data: TEvolutionInfo | TPokemonInfo;
   count: number;
 };
 
